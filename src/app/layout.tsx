@@ -24,6 +24,7 @@ export default function RootLayout({
         <div className="flex h-screen bg-stone-100/50">
           <Sidebar />
           <main className="flex-1 overflow-auto">
+            <div role="status" className="bg-amber-50 border-b border-amber-200 px-6 py-3 text-sm text-amber-950">Email sending is disabled while security checks are completed.</div>
             {children}
           </main>
         </div>

@@ -79,9 +79,12 @@ export default async function CampaignDetailPage({
                 <p className="text-sm text-gray-400">Preview: {campaign.previewText}</p>
               )}
             </div>
-            <div 
-              className="prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: campaign.content }}
+            <iframe
+              title="Email preview"
+              sandbox=""
+              referrerPolicy="no-referrer"
+              className="w-full min-h-[32rem] border-0 bg-white"
+              srcDoc={`<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"></head><body>${campaign.content}</body></html>`}
             />
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
@@ -18,6 +19,9 @@ interface SendGridEvent {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await requireApiAccess('POST', '/api/webhooks/sendgrid')
+  if (denied) return denied
+
   try {
     const events: SendGridEvent[] = await request.json()
 
@@ -137,5 +141,8 @@ export async function POST(request: NextRequest) {
 
 // SendGrid sends a GET to verify the webhook URL
 export async function GET() {
+  const denied = await requireApiAccess('GET', '/api/webhooks/sendgrid')
+  if (denied) return denied
+
   return NextResponse.json({ status: 'ok' })
 }

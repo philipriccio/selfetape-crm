@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { sendBulkCampaign } from '@/lib/sendgrid'
@@ -6,6 +7,9 @@ export const dynamic = 'force-dynamic'
 
 // This endpoint is called by cron to process scheduled campaigns
 export async function GET() {
+  const denied = await requireApiAccess('GET', '/api/cron/send-scheduled')
+  if (denied) return denied
+
   try {
     // Find campaigns that are scheduled and due
     const now = new Date()

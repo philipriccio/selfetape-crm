@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -11,6 +12,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('GET', '/api/track/open/[id]')
+  if (denied) return denied
+
   const { id } = await params
 
   // Record the open (don't await - fire and forget for speed)

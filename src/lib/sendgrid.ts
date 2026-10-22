@@ -1,10 +1,3 @@
-import sgMail from '@sendgrid/mail'
-
-// Initialize SendGrid with API key
-const apiKey = process.env.SENDGRID_API_KEY
-if (apiKey) {
-  sgMail.setApiKey(apiKey)
-}
 
 export interface EmailParams {
   to: string
@@ -22,30 +15,10 @@ export interface EmailParams {
   customArgs?: Record<string, string>
 }
 
-export async function sendEmail(params: EmailParams): Promise<boolean> {
-  if (!apiKey) {
-    console.error('SendGrid API key not configured')
-    return false
-  }
-
-  try {
-    await sgMail.send({
-      to: params.to,
-      from: params.from,
-      replyTo: params.replyTo || params.from.email,
-      subject: params.subject,
-      html: params.html,
-      trackingSettings: params.trackingSettings || {
-        clickTracking: { enable: true },
-        openTracking: { enable: true },
-      },
-      customArgs: params.customArgs,
-    })
-    return true
-  } catch (error) {
-    console.error('SendGrid error:', error)
-    return false
-  }
+export async function sendEmail(_params: EmailParams): Promise<boolean> {
+  // Deliberate hard stop. Re-enable only after signed public delivery routes,
+  // suppression, provider callbacks and explicit send approvals are implemented.
+  throw new Error('SelfTape email delivery is disabled pending security review')
 }
 
 export async function sendBulkEmails(

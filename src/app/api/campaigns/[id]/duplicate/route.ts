@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -5,6 +6,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('POST', '/api/campaigns/[id]/duplicate')
+  if (denied) return denied
+
   const { id } = await params
 
   const campaign = await prisma.campaign.findUnique({

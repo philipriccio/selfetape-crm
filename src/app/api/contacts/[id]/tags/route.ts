@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -5,6 +6,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('POST', '/api/contacts/[id]/tags')
+  if (denied) return denied
+
   try {
     const { id } = await params
     const body = await request.json()

@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 import { startBackgroundCampaignSend } from '@/lib/campaign-sender'
@@ -6,6 +7,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('POST', '/api/campaigns/[id]/send')
+  if (denied) return denied
+
   const { id } = await params
   const body = await request.json()
   const { mode, tagIds, scheduledAt } = body

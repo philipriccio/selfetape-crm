@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -11,6 +12,9 @@ function escapeCsv(value: string): string {
 }
 
 export async function GET(request: NextRequest) {
+  const denied = await requireApiAccess('GET', '/api/contacts/export')
+  if (denied) return denied
+
   try {
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get('search') || ''

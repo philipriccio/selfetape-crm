@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -5,6 +6,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('GET', '/api/contacts/[id]')
+  if (denied) return denied
+
   const { id } = await params
 
   const contact = await prisma.contact.findUnique({
@@ -22,6 +26,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('PUT', '/api/contacts/[id]')
+  if (denied) return denied
+
   const { id } = await params
   const body = await request.json()
 
@@ -48,6 +55,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireApiAccess('DELETE', '/api/contacts/[id]')
+  if (denied) return denied
+
   const { id } = await params
 
   await prisma.contact.delete({

@@ -1,7 +1,11 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
+  const denied = await requireApiAccess('POST', '/api/contacts/import')
+  if (denied) return denied
+
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File

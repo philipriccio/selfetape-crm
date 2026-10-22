@@ -1,7 +1,11 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
+  const denied = await requireApiAccess('GET', '/api/contacts/search')
+  if (denied) return denied
+
   const searchParams = request.nextUrl.searchParams
   const email = searchParams.get('email')
   const name = searchParams.get('name')

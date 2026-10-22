@@ -4,9 +4,9 @@ const nextConfig: NextConfig = {
   // Output standalone build for Docker deployment
   output: 'standalone',
   
-  // Skip TypeScript errors during build
+  // Security releases must pass TypeScript checks
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   
   // Experimental features

@@ -1,53 +1,27 @@
-# Company Theatre CRM — Project Overview
+# SelfTape CRM — security recovery
 
-## 🎯 Vision
-Email marketing and contact management CRM for The Company Theatre, Philip's boutique theatre company in Toronto. Send announcements, track subscribers, manage the theatre's audience database.
+This repository is the SelfTape CRM, not Company Theatre CRM. Previous inherited project documentation was stale and contained exposed historical login information. Never reuse historical credentials; their removal does not erase Git history.
 
-## 👤 For Whom
-Philip Riccio — Artistic Director of The Company Theatre. Needs to send email campaigns for show announcements, especially the upcoming Jackpot Twins production (March 31, 2026 announcement).
+## Current security posture (2026-10-22 UTC)
 
-## 🏗️ Current State (Feb 21, 2026)
-**Status:** Deployed, functional
-**URL:** https://crm.companytheatre.ca
-- Auth: protected production HTTP authentication.
+- Private pages and APIs require protected runtime HTTP Basic authentication over HTTPS, enforced by the Next16 proxy and independently by every API handler.
+- Environment names: SELFETAPE_ADMIN_USER, SELFETAPE_ADMIN_PASSWORD (32+ random characters), SELFETAPE_PUBLIC_ORIGIN (exact HTTPS origin, no trailing slash).
+- A separate server-to-server SELFETAPE_SIGNUP_TOKEN (32+ random characters) permits only POST /api/website-signups. It cannot read or administer contacts. The website must keep it server-side.
+- New website contacts have solicitation=false and unverified consent provenance; existing contacts and suppression remain untouched. Signup does not send email.
+- All sending, scheduled dispatch, SendGrid callbacks, unsigned unsubscribe and tracking endpoints are disabled. Provider function also throws before delivery. No environment toggle enables mail.
+- Browser mutations require exact configured Origin; automation must explicitly supply it along with admin authentication.
+- Campaign HTML preview is isolated in a sandboxed opaque-origin iframe with restrictive CSP; no script/form/top-navigation permissions.
+- No schema migration. Existing isolated runtime database account and data must be retained.
 
-### What's Built
-- Contact management (14,142 contacts imported from Keela)
-- 87 tags imported (show attendance, mailing lists)
-- Campaign builder with HTML editor
-- Drag & drop email template builder (8 block types)
-- Campaign send flow (select recipients by tag)
-- Test send functionality
-- Open tracking (pixel) + click tracking (link wrapping)
-- Unsubscribe system (CASL compliant)
+## Verification
 
-### Pending
-- Create hello@companytheatre.ca for sends
-- Full production testing before March 31 campaign
+`npx tsx --test tests/access-policy.test.ts`
+`npx tsc --noEmit`
+`npm run build`
+`node tests/http-security.mjs`
 
-## 📜 History
+Runtime smoke is local-only, fake test credentials, no DB writes or provider sends. Root operator owns production rollout and live verification. Keep production stopped until protected runtime authentication values are present and anonymous access is proven denied.
 
-### Feb 17, 2026 — Built in Single Day
-- Full CRM built and deployed in one sprint
-- Contact import from Keela export
-- Email campaign functionality via SendGrid
-- Deployed to DigitalOcean + Coolify
+## Remaining limitations
 
-## 🔧 Technical Stack
-- **Framework:** Next.js 16 + TypeScript + Tailwind CSS v4
-- **Database:** PostgreSQL via Prisma 6
-- **Email:** SendGrid API
-- **Hosting:** DigitalOcean via Coolify
-
-## ⚠️ Critical Constraints
-1. **March 31, 2026 deadline** — Must be ready for Jackpot Twins announcement
-2. **CASL compliance** — All emails must have unsubscribe, respect opt-outs
-3. **SendGrid verified sender** — philip@companytheatre.ca is verified
-
-## 🚫 What NOT to Do
-- Don't send campaigns without Philip's approval
-- Don't modify contact data without asking
-- Don't change email sender address without DNS verification
-
----
-*Last updated: 2026-02-21 by Mildred*
+HTTP Basic is single-account, no MFA/session logout/account lockout. Keep high-entropy credentials protected and use HTTPS only. Website signup still needs anti-abuse/rate limiting and affirmative consent UX before it is a marketing-consent source. Legacy email delivery needs signed tracking/unsubscribe, signed webhook verification, conservative suppression checks, reliable dispatch/cancellation and approval workflow before any re-enable. Settings form is an inherited non-persistent mock, not a credential provisioning interface. Historical credentials in Git require rotation wherever reused; do not expose them.

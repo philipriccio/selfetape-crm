@@ -1,3 +1,4 @@
+import { requireApiAccess } from '@/lib/api-access'
 import { prisma } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -18,6 +19,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
+  const denied = await requireApiAccess('GET', '/api/unsubscribe/[token]')
+  if (denied) return denied
+
   const { token } = await params
   const email = decodeToken(token)
   
@@ -45,6 +49,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
+  const denied = await requireApiAccess('POST', '/api/unsubscribe/[token]')
+  if (denied) return denied
+
   const { token } = await params
   const email = decodeToken(token)
   
