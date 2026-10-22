@@ -35,5 +35,11 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@prisma/config": {
+      "effect": "3.22.3",
+      "deepmerge-ts": "8.0.2"
+    }
   }
 }
