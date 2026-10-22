@@ -9,7 +9,7 @@ Philip Riccio — Artistic Director of The Company Theatre. Needs to send email 
 ## 🏗️ Current State (Feb 21, 2026)
 **Status:** Deployed, functional
 **URL:** https://crm.companytheatre.ca
-**Auth:** Basic auth
+- Auth: protected production HTTP authentication.
 
 ### What's Built
 - Contact management (14,142 contacts imported from Keela)

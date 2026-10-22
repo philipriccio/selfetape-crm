@@ -17,11 +17,11 @@
     "@sendgrid/mail": "^8.1.6",
     "csv-parse": "^6.1.0",
     "dotenv": "^17.3.1",
-    "next": "16.1.6",
+    "next": "16.4.2",
     "pg": "^8.18.0",
     "prisma": "^6.8.2",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
@@ -31,7 +31,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
